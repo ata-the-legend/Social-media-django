@@ -38,7 +38,7 @@ A social media app built with Django.
     Python 3
     Django
     Bootstrap
-    Postgres (Database)
+    Postgres (Database) (https://drawsql.app/teams/ata-2/diagrams/social-media-project)
 
 ## Authors
 
