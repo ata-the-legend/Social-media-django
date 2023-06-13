@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 class User(BaseModel):
 
     name = models.CharField(_("Name"), max_length=100)
-    avatar = models.ImageField(_("Avatar"), upload_to=None, height_field=None, width_field=None, max_length=None) #alt = name
+    avatar = models.ImageField(_("Avatar"), upload_to='avatars', height_field=None, width_field=None, max_length=None) #alt = name
     bio = models.TextField(_("Bio"))
     password = models.CharField(_("Password hass"), max_length=250)
     email = models.EmailField(_("Email"), max_length=254)
