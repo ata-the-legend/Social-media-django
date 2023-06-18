@@ -8,9 +8,11 @@ class Post(BaseModel):
 
     title = models.CharField(_("Title"), max_length=100)
     description = models.TextField(_("Description"))
-    user_id = models.ForeignKey("user.User", verbose_name=_("User ID"), on_delete=models.CASCADE)
-    is_liked = models.BooleanField(_("Is liked"), default=False)
+    user_id = models.ForeignKey("user.User", verbose_name=_("User ID"), on_delete=models.CASCADE, related_name='posts')
+    # is_liked = models.BooleanField(_("Is liked"), default=False)
     
+    def is_liked_by_user(self, user):
+        return self.like_set.filter(user_id = user).exists()
 
     class Meta:
         verbose_name = _("Post")
@@ -40,7 +42,7 @@ class Comments(BaseModel):
 
 class Media(BaseModel):
 
-    image = models.ImageField(_("Image"), upload_to='media', height_field=None, width_field=None, max_length=None)
+    media = models.FileField(_("Media"), upload_to='uploads/medias/')
     alt = models.CharField(_("Alter"), max_length=100)
     is_default = models.BooleanField(_("Is Default"), default=False)
     post_id = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
@@ -60,6 +62,7 @@ class Like(BaseModel):
 
     user_id = models.ForeignKey("user.User", verbose_name=_("User"), on_delete=models.DO_NOTHING)
     post_id = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
+    is_like = models.BooleanField(_("like/dislike"))
 
     class Meta:
         verbose_name = _("Like")
@@ -72,8 +75,8 @@ class Like(BaseModel):
 
 class Hashtag(BaseModel):
 
-    tag = models.SlugField(_("Hashtag"))
-    post_id = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
+    tag = models.SlugField(_("Hashtag"), unique=True)
+    post_id = models.ManyToManyField("Post", verbose_name=_("Post"), on_delete=models.CASCADE, related_name='tags')
 
     class Meta:
         verbose_name = _("Hashtag")
