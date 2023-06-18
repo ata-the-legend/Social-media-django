@@ -8,7 +8,7 @@ class Post(BaseModel):
 
     title = models.CharField(_("Title"), max_length=100)
     description = models.TextField(_("Description"))
-    user_id = models.ForeignKey("user.User", verbose_name=_("User ID"), on_delete=models.CASCADE, related_name='posts')
+    user_account = models.ForeignKey("accounts.Account", verbose_name=_("User ID"), on_delete=models.CASCADE, related_name='posts')
     # is_liked = models.BooleanField(_("Is liked"), default=False)
     
     def is_liked_by_user(self, user):
@@ -25,8 +25,8 @@ class Post(BaseModel):
 
 class Comments(BaseModel):
 
-    post_id = models.ForeignKey("Post", verbose_name=_("Post ID"), on_delete=models.CASCADE)
-    author = models.ForeignKey("user.User", verbose_name=_("Author"), on_delete=models.CASCADE)
+    user_post = models.ForeignKey("Post", verbose_name=_("Post ID"), on_delete=models.CASCADE)
+    author = models.ForeignKey("accounts.Account", verbose_name=_("Author"), on_delete=models.CASCADE)
     content = models.TextField(_("Comment"))
     parent = models.ForeignKey("self", verbose_name=_("Parent"), on_delete=models.CASCADE, null=True, blank=True)
     
@@ -42,10 +42,10 @@ class Comments(BaseModel):
 
 class Media(BaseModel):
 
-    media = models.FileField(_("Media"), upload_to='uploads/medias/')
+    user_media = models.FileField(_("Media"), upload_to='uploads/medias/')
     alt = models.CharField(_("Alter"), max_length=100)
     is_default = models.BooleanField(_("Is Default"), default=False)
-    post_id = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
+    user_post = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
     
 
     class Meta:
@@ -60,8 +60,8 @@ class Media(BaseModel):
 
 class Like(BaseModel):
 
-    user_id = models.ForeignKey("user.User", verbose_name=_("User"), on_delete=models.DO_NOTHING)
-    post_id = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
+    user_account = models.ForeignKey("accounts.Account", verbose_name=_("User"), on_delete=models.DO_NOTHING)
+    user_post = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
     is_like = models.BooleanField(_("like/dislike"))
 
     class Meta:
@@ -76,7 +76,7 @@ class Like(BaseModel):
 class Hashtag(BaseModel):
 
     tag = models.SlugField(_("Hashtag"), unique=True)
-    post_id = models.ManyToManyField("Post", verbose_name=_("Post"), on_delete=models.CASCADE, related_name='tags')
+    user_post = models.ManyToManyField("Post", verbose_name=_("Post"), related_name='tags')
 
     class Meta:
         verbose_name = _("Hashtag")
@@ -84,6 +84,7 @@ class Hashtag(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 
 

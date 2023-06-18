@@ -5,8 +5,8 @@ from django.utils.translation import gettext as _
 
 class UserFollow(BaseModel):
 
-    follower = models.ForeignKey("user.User", verbose_name=_("Follower"), on_delete=models.CASCADE, related_name='followers')
-    followee = models.ForeignKey("user.User", verbose_name=_("Followee"), on_delete=models.CASCADE, related_name='followees')
+    follower = models.ForeignKey("accounts.Account", verbose_name=_("Follower"), on_delete=models.CASCADE, related_name='followers')
+    followee = models.ForeignKey("accounts.Account", verbose_name=_("Followee"), on_delete=models.CASCADE, related_name='followees')
 
     class Meta:
         verbose_name = _("UserFollow")
@@ -17,8 +17,8 @@ class UserFollow(BaseModel):
 
 class HashtagFollow(models.Model):
 
-    follower = models.ForeignKey("user.User", verbose_name=_("Follower"), on_delete=models.CASCADE)
-    tag = models.ForeignKey("post.Hashtag", verbose_name=_("Hashtag"), on_delete=models.CASCADE)
+    follower = models.ForeignKey("accounts.Account", verbose_name=_("Follower"), on_delete=models.CASCADE)
+    tag = models.ForeignKey("posts.Hashtag", verbose_name=_("Hashtag"), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("HashtagFollow")
