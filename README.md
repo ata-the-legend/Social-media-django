@@ -4,20 +4,22 @@ A social media app built with Django.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Built With](#built-with)
-- [Authors](#authors)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+- [Social Media](#social-media)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Getting Started](#getting-started)
+  - [Built With](#built-with)
+  - [Authors](#authors)
+  - [License](#license)
+  - [Acknowledgements](#acknowledgements)
 
 
 ## Features
 
-    Users can post media and a description
-    Users can like and comment on posts
-    Users have profiles where they can upload an avatar and see their post history
-    Users can follow other users to see their posts
+- Users can post media and a description
+- Users can like and comment on posts
+- Users have profiles where they can upload an avatar and see their post history
+- Users can follow other users to see their posts
 
 ## Getting Started
 
@@ -35,10 +37,11 @@ A social media app built with Django.
 
 ## Built With
 
-    Python 3
-    Django
-    Bootstrap
-    Postgres (Database) (https://drawsql.app/teams/ata-2/diagrams/social-media-project)
+Python 3
+Django
+Bootstrap
+SQLite (Database) 
+![ERD](./ERD.png)
 
 ## Authors
 
