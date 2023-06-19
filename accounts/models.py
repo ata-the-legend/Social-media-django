@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 
 class Account(models.Model):
 
-    user = models.ForeignKey("User", verbose_name=_("User"), on_delete=models.CASCADE, related_name='account')
+    user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE, related_name='account')
     # name = models.CharField(_("Name"), max_length=100)
     avatar = models.ImageField(_("Avatar"), upload_to='uploads/avatars/', height_field=None, width_field=None, max_length=None) #alt = name
     bio = models.TextField(_("Bio"), null=True, blank=True)
@@ -23,7 +23,7 @@ class Account(models.Model):
         ...
 
     def follow(self, other):
-        relation
+        ...
 
     def archive(self):
         self.is_active = False
