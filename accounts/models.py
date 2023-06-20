@@ -21,7 +21,7 @@ class Account(models.Model):
     
     @classmethod
     def create_account(cls, username, password, avatar, bio, birthdate, **kwargs):
-        user = User.objects.create(username= username, password= password, extra_fields=kwargs)
+        user = User.objects.create(username= username, password= password, **kwargs)
         return cls.objects.create(user= user, avatar= avatar, bio= bio, birthdate= birthdate)
 
     def user_followers(self):
