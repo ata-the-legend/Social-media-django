@@ -9,11 +9,11 @@ class Account(models.Model):
 
     user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE, related_name='account')
     # name = models.CharField(_("Name"), max_length=100)
-    avatar = models.ImageField(_("Avatar"), upload_to='uploads/avatars/', height_field=None, width_field=None, max_length=None) #alt = name
+    avatar = models.ImageField(_("Avatar"), upload_to='uploads/avatars/') #alt = name
     bio = models.TextField(_("Bio"), null=True, blank=True)
     # password = models.CharField(_("Password hass"), max_length=250)
     # email = models.EmailField(_("Email"), max_length=254)
-    birthdate = models.DateField(_("Birthdate"), auto_now=False, auto_now_add=False)
+    birthdate = models.DateField(_("Birthdate"))
 
     @property
     def user_posts(self):
@@ -34,11 +34,11 @@ class Account(models.Model):
         self.save()
 
     class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
+        verbose_name = _("Account")
+        verbose_name_plural = _("Accounts")
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.bio}'
 
 
 
