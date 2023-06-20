@@ -34,7 +34,7 @@ class Account(models.Model):
         return UserFollow.objects.filter(follower= self, followee= other).exists()
 
     def follow(self, other):
-        if not self.is_followed(self, other):
+        if not self.is_followed(other):
             UserFollow.objects.create(follower= self, followee= other)
 
     def archive(self):
