@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{user.first_name}} {{user.last_name}}{% endblock title %}
+
+{% block main %}
+
+<div class="container hell card mb-3">
+    
+    <div class="row">
+        <div class="col-4">
+            <img src="{{account.avatar.url}}" alt="{{user.username}}" class="rounded-circle avatar mb-3"> 
+            <h2>{{user.first_name}} {{user.last_name}}</h2>    
+            <p>{{account.bio}}</p>
+        </div>
+        
+        <div class="col-6">     
+            <!-- Stats -->   
+            <div class="row mb-3">  
+                <div class="col">
+                    <div class="h4 mb-1">120K</div>
+                    <div>Followers</div>        
+            </div>
+            <div class="col">
+                <div class="h4 mb-1">100K</div>
+                <div>Followees</div>        
+            </div>
+        </div>  
+    
+        <div class="row">      
+            <a href="#" class="btn btn-primary mr-2">Follow</a> 
+            <a href="#" class="btn btn-outline-secondary">Message</a>
+        </div>   
+    </div>
+</div>
+
+</div>
+
+{% endblock main %}

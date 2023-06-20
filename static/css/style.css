@@ -1,0 +1,9 @@
+.avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.hell {
+    background-color: rgb(255, 108, 137);
+}
