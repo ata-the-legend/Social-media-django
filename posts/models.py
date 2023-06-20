@@ -6,20 +6,39 @@ from django.utils.translation import gettext as _
 
 class Post(BaseModel):
 
-    title = models.CharField(_("Title"), max_length=100)
+    # title = models.CharField(_("Title"), max_length=100)
     description = models.TextField(_("Description"))
     user_account = models.ForeignKey("accounts.Account", verbose_name=_("User ID"), on_delete=models.CASCADE, related_name='posts')
     # is_liked = models.BooleanField(_("Is liked"), default=False)
     
-    def is_liked_by_user(self, user):
-        return self.like_set.filter(user_id = user).exists()
+    def is_any_like(self):
+        return self.like_set.all().exists()
+
+    def is_liked_by_user(self, account):
+        return self.like_set.filter(user_account = account).exists()
+    
+    def like_post(self, account):
+        if not self.is_liked_by_user(account):
+            self.like_set.add(account)
+
+    def post_likes(self):
+        return self.like_set.all()
+
+    def post_media(self):
+        return self.media_set.all()
+
+    def post_comments(self):
+        return self.comment_set.all()
+    
+    def post_hashtags(self):
+        return self.tags_set.all()
 
     class Meta:
         verbose_name = _("Post")
         verbose_name_plural = _("Posts")
 
     def __str__(self):
-        return self.title
+        return self.description
 
 
 
@@ -36,7 +55,7 @@ class Comments(BaseModel):
         verbose_name_plural = _("Commentss")
 
     def __str__(self):
-        return self.content
+        return self.author.user.username
 
 
 
@@ -69,7 +88,7 @@ class Like(BaseModel):
         verbose_name_plural = _("Likes")
 
     def __str__(self):
-        return self.name
+        return f"{self.user_account.user.username} liked {self.user_post.user_account.user.username}'s post"
 
 
 
@@ -78,12 +97,15 @@ class Hashtag(BaseModel):
     tag = models.SlugField(_("Hashtag"), unique=True)
     user_post = models.ManyToManyField("Post", verbose_name=_("Post"), related_name='tags')
 
+    def hashtag_posts(self):
+        return Hashtag.objects.filter(tag = self)
+
     class Meta:
         verbose_name = _("Hashtag")
         verbose_name_plural = _("Hashtags")
 
     def __str__(self):
-        return self.name
+        return self.tag
 
 
 
