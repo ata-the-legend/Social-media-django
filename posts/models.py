@@ -95,10 +95,12 @@ class Like(BaseModel):
 class Hashtag(BaseModel):
 
     tag = models.SlugField(_("Hashtag"), unique=True)
-    user_post = models.ForeignKey("Post", verbose_name=_("Post"), related_name='tags',on_delete=models.DO_NOTHING)
+    user_post = models.ManyToManyField("Post", verbose_name=_("Post"), related_name='tags')
 
-    def hashtag_posts(self):
-        return Hashtag.objects.filter(tag = self)
+    @classmethod
+    def hashtag_posts(cls, tag: str):
+        hashtag = cls.objects.get(tag = tag)
+        return hashtag.user_post.all()
 
     class Meta:
         verbose_name = _("Hashtag")

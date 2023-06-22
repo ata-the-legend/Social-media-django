@@ -7,7 +7,7 @@ class PostTestCase(TestCase):
     def setUp(self) -> None:
         self.account = Account.create_account(username='test', password = 'test', first_name='firsttest', last_name='lasttest', bio='testbio',birthdate='2000-2-2', avatar='default.png')
         ########
-        self.account.save()
+        # self.account.save()
         self.post = Post.objects.create(user_account= self.account, description="Test post", )
         return super().setUp()
 
@@ -45,7 +45,7 @@ class CommentTestCase(TestCase):
     def setUp(self) -> None:
         self.account = Account.create_account(username='test', password = 'test', first_name='firsttest', last_name='lasttest', bio='testbio',birthdate='2000-2-2', avatar='default.png')
         ########
-        self.account.save()
+        # self.account.save()
         self.post = Post.objects.create(user_account= self.account, description="Test post")
         self.comment = Comment.objects.create(user_post= self.post, author= self.account ,content='Comment') 
         return super().setUp()
@@ -63,12 +63,14 @@ class HashtagTestCase(TestCase):
      def setUp(self) -> None:
         self.account = Account.create_account(username='test', password = 'test', first_name='firsttest', last_name='lasttest', bio='testbio',birthdate='2000-2-2', avatar='default.png')
         ########
-        self.account.save()
+        # self.account.save()
         self.post = Post.objects.create(user_account= self.account, description="Test post")
-        self.hashtag = Hashtag.objects.create(tag='test_tag', user_post= self.post) 
+        self.hashtag = Hashtag.objects.create(tag='test_tag') 
+        self.hashtag.user_post.add(self.post)
+        # self.hashtag.save()
         return super().setUp()
 
      def test_hashtag_posts(self):       
-        self.assertEqual(self.hashtag.hashtag_posts().count(), 1)
-        self.assertEqual(self.hashtag.hashtag_posts()[0].user_post, self.post)
+        self.assertEqual(Hashtag.hashtag_posts(self.hashtag.tag).count(), 1)
+        self.assertEqual(Hashtag.hashtag_posts(self.hashtag.tag)[0], self.post)
         
