@@ -14,6 +14,7 @@ class Account(models.Model):
     # password = models.CharField(_("Password hass"), max_length=250)
     # email = models.EmailField(_("Email"), max_length=254)
     birthdate = models.DateField(_("Birthdate"))
+    is_active = models.BooleanField(_("Is_Active"), default= True)
 
     @property
     def user_posts(self):
@@ -25,10 +26,10 @@ class Account(models.Model):
         return cls.objects.create(user= user, avatar= avatar, bio= bio, birthdate= birthdate)
 
     def user_followers(self):
-        return self.followers.all()
+        return self.followees.all()
     
     def user_followees(self):
-        return self.followees.all()
+        return self.followers.all()
 
     def is_followed(self, other):
         return UserFollow.objects.filter(follower= self, followee= other).exists()
@@ -39,10 +40,12 @@ class Account(models.Model):
 
     def archive(self):
         self.is_active = False
+        self.user.is_active = False
         self.save()
 
     def restore(self):
         self.is_active= True
+        self.user.is_active = True
         self.save()
 
     class Meta:
