@@ -19,7 +19,7 @@ class Post(BaseModel):
     
     def like_post(self, account):
         if not self.is_liked_by_user(account):
-            self.like_set.add(account)
+            return Like.objects.create(user_account= account ,user_post= self ,is_like=True)
 
     def post_likes(self):
         return self.like_set.all()
@@ -31,7 +31,7 @@ class Post(BaseModel):
         return self.comment_set.all()
     
     def post_hashtags(self):
-        return self.tags_set.all()
+        return self.tags.all()
 
     class Meta:
         verbose_name = _("Post")
@@ -42,7 +42,7 @@ class Post(BaseModel):
 
 
 
-class Comments(BaseModel):
+class Comment(BaseModel):
 
     user_post = models.ForeignKey("Post", verbose_name=_("Post ID"), on_delete=models.CASCADE)
     author = models.ForeignKey("accounts.Account", verbose_name=_("Author"), on_delete=models.CASCADE)
@@ -81,7 +81,7 @@ class Like(BaseModel):
 
     user_account = models.ForeignKey("accounts.Account", verbose_name=_("User"), on_delete=models.DO_NOTHING)
     user_post = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
-    is_like = models.BooleanField(_("like/dislike"))
+    is_like = models.BooleanField(_("like/dislike"), default=True)
 
     class Meta:
         verbose_name = _("Like")
@@ -95,7 +95,7 @@ class Like(BaseModel):
 class Hashtag(BaseModel):
 
     tag = models.SlugField(_("Hashtag"), unique=True)
-    user_post = models.ManyToManyField("Post", verbose_name=_("Post"), related_name='tags')
+    user_post = models.ForeignKey("Post", verbose_name=_("Post"), related_name='tags',on_delete=models.DO_NOTHING)
 
     def hashtag_posts(self):
         return Hashtag.objects.filter(tag = self)
