@@ -8,7 +8,11 @@ class Post(BaseModel):
 
     # title = models.CharField(_("Title"), max_length=100)
     description = models.TextField(_("Description"))
-    user_account = models.ForeignKey("accounts.Account", verbose_name=_("User ID"), on_delete=models.CASCADE, related_name='posts')
+    user_account = models.ForeignKey("accounts.Account", 
+                                     verbose_name=_("User ID"), 
+                                     on_delete=models.CASCADE, 
+                                     related_name='posts'
+                                     )
     # is_liked = models.BooleanField(_("Is liked"), default=False)
     
     def is_any_like(self):
@@ -44,10 +48,21 @@ class Post(BaseModel):
 
 class Comment(BaseModel):
 
-    user_post = models.ForeignKey("Post", verbose_name=_("Post ID"), on_delete=models.CASCADE)
-    author = models.ForeignKey("accounts.Account", verbose_name=_("Author"), on_delete=models.CASCADE)
+    user_post = models.ForeignKey("Post", 
+                                  verbose_name=_("Post ID"), 
+                                  on_delete=models.CASCADE
+                                  )
+    author = models.ForeignKey("accounts.Account", 
+                               verbose_name=_("Author"), 
+                               on_delete=models.CASCADE
+                               )
     content = models.TextField(_("Comment"))
-    parent = models.ForeignKey("self", verbose_name=_("Parent"), on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey("self", 
+                               verbose_name=_("Parent"), 
+                               on_delete=models.CASCADE, 
+                               null=True, 
+                               blank=True
+                               )
     
 
     class Meta:
@@ -61,10 +76,20 @@ class Comment(BaseModel):
 
 class Media(BaseModel):
 
-    user_media = models.FileField(_("Media"), upload_to='uploads/medias/')
-    alt = models.CharField(_("Alter"), max_length=100)
-    is_default = models.BooleanField(_("Is Default"), default=False)
-    user_post = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
+    user_media = models.FileField(_("Media"), 
+                                  upload_to='uploads/medias/'
+                                  )
+    alt = models.CharField(_("Alter"), 
+                           max_length=100, 
+                           default='not found'
+                           )
+    is_default = models.BooleanField(_("Is Default"), 
+                                     default=False
+                                     )
+    user_post = models.ForeignKey("Post", 
+                                  verbose_name=_("Post"), 
+                                  on_delete=models.CASCADE
+                                  )
     
 
     class Meta:
@@ -79,8 +104,13 @@ class Media(BaseModel):
 
 class Like(BaseModel):
 
-    user_account = models.ForeignKey("accounts.Account", verbose_name=_("User"), on_delete=models.DO_NOTHING)
-    user_post = models.ForeignKey("Post", verbose_name=_("Post"), on_delete=models.CASCADE)
+    user_account = models.ForeignKey("accounts.Account", 
+                                     verbose_name=_("User"), 
+                                     on_delete=models.DO_NOTHING)
+    user_post = models.ForeignKey("Post", 
+                                  verbose_name=_("Post"), 
+                                  on_delete=models.CASCADE
+                                  )
     is_like = models.BooleanField(_("like/dislike"), default=True)
 
     class Meta:
@@ -94,8 +124,13 @@ class Like(BaseModel):
 
 class Hashtag(BaseModel):
 
-    tag = models.SlugField(_("Hashtag"), unique=True)
-    user_post = models.ManyToManyField("Post", verbose_name=_("Post"), related_name='tags')
+    tag = models.SlugField(_("Hashtag"), 
+                           unique=True
+                           )
+    user_post = models.ManyToManyField("Post", 
+                                       verbose_name=_("Post"), 
+                                       related_name='tags'
+                                       )
 
     @classmethod
     def hashtag_posts(cls, tag: str):

@@ -17,8 +17,14 @@ class UserFollow(BaseModel):
 
 class HashtagFollow(models.Model):
 
-    follower = models.ForeignKey("accounts.Account", verbose_name=_("Follower"), on_delete=models.CASCADE)
-    tag = models.ForeignKey("posts.Hashtag", verbose_name=_("Hashtag"), on_delete=models.CASCADE)
+    follower = models.ManyToManyField("accounts.Account", verbose_name=_("Follower"), related_name='tag_followers')
+    tag = models.ManyToManyField("posts.Hashtag", verbose_name=_("Hashtag"), related_name='followed_tags')
+
+    def tag_followers(tag):
+        ...
+
+    def followed_tags(account):
+        ...
 
     class Meta:
         verbose_name = _("HashtagFollow")
