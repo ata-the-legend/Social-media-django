@@ -26,7 +26,7 @@ class Post(BaseModel):
             return Like.objects.create(user_account= account ,user_post= self ,is_like=True)
 
     def post_likes(self):
-        return self.like_set.all()
+        return self.like_set.all().count()
 
     def post_media(self):
         return self.media_set.all()
