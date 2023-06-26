@@ -18,7 +18,7 @@ class Account(models.Model):
 
     @property
     def user_posts(self):
-        return self.posts.all()
+        return self.posts.all().order_by('-create_at')
     
     @classmethod
     def create_account(cls, username, password, avatar, bio, birthdate, **kwargs):
