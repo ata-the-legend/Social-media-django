@@ -16,3 +16,24 @@ class ProfileView(View):
         context = {'account': account, "user": user, 'posts': posts}
         return render(request, 'accounts/account.html', context)
 
+class LoginView(View):
+    template = 'accounts/login.html'
+    form_class = LoginForm
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(request, username = cd['username'], password= cd['password'])
+            if user is not None:
+                login(request ,user)
+                messages.success(request, f"{cd['username']} logged in", 'success')
+                return redirect('posts:post_list')
+            else:
+                messages.error(request, 'username or password is wrong', 'warning')
+            
+        return render(request, self.template, {'form':form})
