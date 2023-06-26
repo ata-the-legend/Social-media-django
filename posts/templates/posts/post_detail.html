@@ -1,0 +1,90 @@
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-white post">
+            <div class="post-heading">
+                <div class="pull-left image">
+                <img src={{post.user_account.avatar.url}} class="img-circle avatar" alt="user profile image">
+                </div>
+                <div class="pull-left meta">
+                    <div class="title h5">
+                    <a href="{% url 'accounts:profile' post.user_account.user.username %}"><b>{{post.user_account.user.first_name}} {{post.user_account.user.last_name}}</b></a>
+                    {% comment %} uploaded a photo. {% endcomment %}
+                    </div>
+                <h6 class="text-muted time">{{post.create_at|timesince}} ago</h6>
+                </div>
+            </div>
+            <div class="post-image">
+
+            {% comment %} {% include 'posts/gallery.html' %} {% endcomment %}
+
+            {% for media in post.post_media %}
+                    
+            <img src={{media.user_media.url}} class="image" alt={{media.alt}}>  
+                    
+            {% endfor %}
+
+            </div>
+            <div class="post-description">
+            {% comment %} <h4>Product Shoot</h4> {% endcomment %}
+            {% comment %} vasdvs {% endcomment %}
+            <p>{{post.description}}</p>
+                <div class="stats">
+                <a href={% url 'posts:like' post.id %} class="btn btn-default stat-item">
+                <i class="fa fa-thumbs-up icon"></i>{{post.post_likes}}
+                </a>
+                {% comment %} <a href="javascript:void(0);" class="btn btn-default stat-item">
+                <i class="fa fa-share icon"></i>128
+                </a> {% endcomment %}
+                </div>
+            </div>
+            <div class="post-footer">
+                <div class="input-group">
+                <input class="form-control" placeholder="Add a comment" type="text">
+                <span class="input-group-addon">
+                <a href="javascript:void(0);"><i class="fa fa-edit"></i></a>
+                </span>
+                </div>
+            <ul class="comments-list">
+            <li class="comment">
+            <a class="pull-left" href="javascript:void(0);">
+            <img class="avatar" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+            </a>
+                <div class="comment-body">
+                    <div class="comment-heading">
+                    <h4 class="user">John dOE</h4>
+                    <h5 class="time">7 minutes ago</h5>
+                    </div>
+                <p>I really love this picture. I really wish i could have been there.</p>
+                </div>
+            </li>
+            <li class="comment">
+            <a class="pull-left" href="javascript:void(0);">
+            <img class="avatar" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+            </a>
+                <div class="comment-body">
+                    <div class="comment-heading">
+                    <h4 class="user">John Doe</h4>
+                    <h5 class="time">3 minutes ago</h5>
+                    </div>
+                <p>I think I might you this for one of my projects.</p>
+                </div>
+            </li>
+            <li class="comment">
+            <a class="pull-left" href="javascript:void(0);">
+            <img class="avatar" src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="avatar">
+            </a>
+                <div class="comment-body">
+                    <div class="comment-heading">
+                    <h4 class="user">John Doe</h4>
+                    <h5 class="time">10 seconds ago</h5>
+                    </div>
+                <p>Wow! This is gorgeous.</p>
+                </div>
+            </li>
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

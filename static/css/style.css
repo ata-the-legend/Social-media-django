@@ -2,8 +2,10 @@
     width: 150px;
     height: 150px;
     object-fit: cover;
+    padding: 10px;
 }
 
 .hell {
-    background-color: rgb(255, 108, 137);
+    background-color: rgb(192, 129, 226);
+    max-width: 800px;
 }
