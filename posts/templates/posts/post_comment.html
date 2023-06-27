@@ -1,0 +1,99 @@
+<form action={% url 'posts:comment' post.id 'post'%} method='post'>
+    {% csrf_token %}
+<div class="input-group">
+    <input class="form-control" placeholder="Add a comment" type="text" name="comment_text" required='True'>
+    <span class="input-group-addon">
+    {% comment %} <a href="/posts/comments/{{post.id}}"><i class="fa fa-edit"></i></a> {% endcomment %}
+    <button type="submit" ><i class="fa fa-edit"></i></button>
+    </span>
+</div>
+</form>
+<ul class="comments-list">
+
+    {% for comment in post.post_comments %}
+    {% if comment.parent is None %}
+    <li class="comment">
+    <a class="pull-left" href="{% url 'accounts:profile' comment.author.user.username %}">
+    <img class="avatar" src={{comment.author.avatar.url}} alt="avatar">
+    </a>
+        <div class="comment-body">
+            <div class="comment-heading">
+            <h4 class="user">{{comment.author.user.first_name}} {{comment.author.user.last_name}}</h4>
+            <h5 class="time">{{comment.create_at|timesince}} ago</h5>
+            </div>
+        <p>{{comment.content}}</p>
+            <form action={% url 'posts:comment' comment.id 'reply'%} method='post'>
+                {% csrf_token %}
+                <div class="input-group">
+                    <input class="form-control" placeholder="Add a comment" type="text" name="comment_text" required='True'>
+                    <span class="input-group-addon">
+                    {% comment %} <a href="/posts/comments/{{post.id}}"><i class="fa fa-edit"></i></a> {% endcomment %}
+                    <button type="submit" ><i class="fa fa-edit"></i></button>
+                    </span>
+                </div>
+            </form>
+            <ul class="comments-list">
+
+                {% for cmt in post.post_comments %}
+                {% if cmt.parent == comment %}
+
+                <li class="comment">
+                <a class="pull-left" href="{% url 'accounts:profile' cmt.author.user.username %}">
+                <img class="avatar" src={{cmt.author.avatar.url}} alt="avatar">
+                </a>
+                    <div class="comment-body">
+                        <div class="comment-heading">
+                        <h4 class="user">{{comment.author.user.first_name}} {{comment.author.user.last_name}}</h4>
+                        <h5 class="time">{{cmt.create_at|timesince}} ago</h5>
+                        </div>
+                    <p>{{cmt.content}}</p>
+                    </div>
+                </li>
+
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </li>
+
+    {% endif %}
+    {% endfor %}
+
+    <li class="comment">
+        <a class="pull-left" href="javascript:void(0);">
+        <img class="avatar" src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="avatar">
+        </a>
+        <div class="comment-body">
+        <div class="comment-heading">
+        <h4 class="user">John Doe</h4>
+        <h5 class="time">10 seconds ago</h5>
+        </div>
+        <p>Wow! This is gorgeous.</p>
+        <div class="input-group">
+            <input class="form-control" placeholder="reply this comment" type="text">
+            <span class="input-group-addon">
+                <a href="posts/comments/{{post.id}}"><i class="fa fa-edit"></i></a>
+            </span>
+        </div>
+        <ul class="comments-list">
+        
+            <li class="comment">
+                <a class="pull-left" href="javascript:void(0);">
+                <img class="avatar" src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="avatar">
+                </a>
+                <div class="comment-body">
+                <div class="comment-heading">
+                <h4 class="user">John Doe</h4>
+                <h5 class="time">10 seconds ago</h5>
+                </div>
+                <p>Wow! This is gorgeous.</p>
+            
+                
+            </div>
+            </li>
+        
+        </ul>
+    </div>
+    </li>
+
+</ul>
