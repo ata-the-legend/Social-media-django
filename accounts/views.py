@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
-from .forms import LoginForm
-
+from .forms import LoginForm, RegisrerForm
+from .models import Account
+from django.db import IntegrityError
 # Create your views here.
 
 class ProfileView(View):
@@ -44,3 +45,39 @@ class LogoutView(View):
         logout(request)
         messages.success(request, "logged out", 'success')
         return redirect('posts:post_list')
+    
+class RegisterView(View):
+
+    form_class = RegisrerForm
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, 'accounts/register.html', {'form': form})
+    
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            try:
+                account = Account.create_account(
+                    username=cd['username'], 
+                    password = cd['password'], 
+                    first_name=cd['first_name'], 
+                    last_name=cd['last_name'], 
+                    bio=cd['bio'],
+                    birthdate=cd['birthdate'], 
+                    avatar=cd['avatar']
+                )
+            except IntegrityError:
+                messages.error(request, 'this username was taken', 'warning')
+                user = None
+            else:
+                user = account.user
+            if user is not None:
+                login(request ,user)
+                messages.success(request, f"{cd['username']} regesterd successfully", 'success')
+                return redirect('accounts:profile', cd['username'])
+            else:
+                messages.error(request, 'this error', 'warning')
+            
+        return render(request, 'accounts/register.html', {'form':form})
