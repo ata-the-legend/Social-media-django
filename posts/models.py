@@ -24,6 +24,10 @@ class Post(BaseModel):
     def like_post(self, account):
         if not self.is_liked_by_user(account):
             return Like.objects.create(user_account= account ,user_post= self ,is_like=True)
+        
+    def unlike_post(self, account):
+        if self.is_liked_by_user(account):
+            return Like.objects.get(user_account= account ,user_post= self ).delete()
 
     def post_likes(self):
         return self.like_set.all().count()

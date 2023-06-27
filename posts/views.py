@@ -21,5 +21,5 @@ class PostLikeView(LoginRequiredMixin ,View):
         if not post.is_liked_by_user(account):
             post.like_post(account)
         else:
-            pass #unlike
+            post.unlike_post(account)
         return redirect('posts:post_list',)
