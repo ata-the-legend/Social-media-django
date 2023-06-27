@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect 
 from .models import Account
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from .forms import LoginForm
@@ -34,6 +34,13 @@ class LoginView(View):
                 messages.success(request, f"{cd['username']} logged in", 'success')
                 return redirect('posts:post_list')
             else:
-                messages.error(request, 'username or password is wrong', 'danger')
+                messages.error(request, 'username or password is wrong', 'warning')
             
         return render(request, self.template, {'form':form})
+    
+class LogoutView(View):
+    
+    def get(self, request):
+        logout(request)
+        messages.success(request, "logged out", 'success')
+        return redirect('posts:post_list')
