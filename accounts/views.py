@@ -34,6 +34,6 @@ class LoginView(View):
                 messages.success(request, f"{cd['username']} logged in", 'success')
                 return redirect('posts:post_list')
             else:
-                messages.error(request, 'username or password is wrong', 'warning')
+                messages.error(request, 'username or password is wrong', 'danger')
             
         return render(request, self.template, {'form':form})
