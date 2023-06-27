@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 class AccountTestCase(TestCase):
 
     def setUp(self):
-        self.account = Account.create_account(username='test', password = 'test', first_name='firsttest', last_name='lasttest', bio='testbio',birthdate='2000-2-2', avatar='default.png')
+        self.account = Account.create_account(username='test', password = 'test', first_name='firsttest', last_name='lasttest', bio='testbio',birthdate='2000-2-2')
+        print(self.account.avatar.url)
         self.post = Post.objects.create(user_account= self.account, description="Test post", )
         self.account2 = Account.create_account(username='test2', password = 'test', first_name='firsttest', last_name='lasttest', bio='testbio',birthdate='2000-2-2', avatar='default.png')
         return super().setUp()
