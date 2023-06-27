@@ -20,8 +20,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.views.generic.base import RedirectView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", RedirectView.as_view(url='http://127.0.0.1:8000/posts/all/'), name="home"),
     path('account/', include('accounts.urls')),
     path('posts/', include('posts.urls')),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\
