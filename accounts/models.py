@@ -9,7 +9,7 @@ class Account(models.Model):
 
     user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE, related_name='account')
     # name = models.CharField(_("Name"), max_length=100)
-    avatar = models.ImageField(_("Avatar"), upload_to='uploads/avatars/') #alt = name
+    avatar = models.ImageField(_("Avatar"), upload_to='uploads/avatars/', default='uploads/avatars/default.jpg', blank=False, null=False) #alt = name
     bio = models.TextField(_("Bio"), null=True, blank=True)
     # password = models.CharField(_("Password hass"), max_length=250)
     # email = models.EmailField(_("Email"), max_length=254)
@@ -21,8 +21,10 @@ class Account(models.Model):
         return self.posts.all().order_by('-create_at')
     
     @classmethod
-    def create_account(cls, username, password, avatar, bio, birthdate, **kwargs):
-        user = User.objects.create(username= username, password= password, **kwargs)
+    def create_account(cls, username, password, bio, birthdate, avatar=None, **kwargs):
+        user = User.objects.create_user(username= username, password= password, **kwargs)
+        if not avatar:
+            return cls.objects.create(user= user, bio= bio, birthdate= birthdate)
         return cls.objects.create(user= user, avatar= avatar, bio= bio, birthdate= birthdate)
 
     def user_followers(self):
