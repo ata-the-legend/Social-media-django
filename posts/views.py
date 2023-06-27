@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.forms import forms
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib import messages
 
 class PostListView(View):
 
@@ -23,3 +23,22 @@ class PostLikeView(LoginRequiredMixin ,View):
         else:
             post.unlike_post(account)
         return redirect('posts:post_list',)
+
+class PostCommentView(LoginRequiredMixin ,View):
+
+    def post(self, request, post_id, on):
+        if on == 'post':
+            user_post = Post.objects.get(id= post_id)
+            user_account = request.user.account.get()
+            Comment.objects.create(user_post= user_post, author= user_account, content=request.POST.get('comment_text'))
+            messages.success(request, 'Comment registered succesfully.')
+            return redirect('posts:post_list')
+        elif on == 'reply':
+            parent = Comment.objects.get(id= post_id)
+            user_post = Post.objects.get(id= parent.user_post.id)
+            user_account = request.user.account.get()
+            Comment.objects.create(user_post= user_post, author= user_account, content=request.POST.get('comment_text'), parent=parent)
+            messages.success(request, 'Comment registered succesfully.')
+            return redirect('posts:post_list')
+        else:
+            return redirect('posts:post_list')
