@@ -38,5 +38,26 @@
 
 </div>
 
-{% include 'posts/post_list.html' %}
+{% comment %} {% include 'posts/post_list.html' %} {% endcomment %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link href="{% static 'css/post_style.css' %}" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="panel panel-white profile-widget">
+        <div class="row">
+
+        {% for post in posts %}
+          {% include 'posts/post_detail.html' %}
+        {% endfor %}
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock main %}

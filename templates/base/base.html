@@ -10,6 +10,7 @@
     
 </head>
 <body>
+    {% include 'components/navbar.html' %}
     {% if messages %}
         {% for message in messages %}
         <p class="alert alert-{{ msg.tags }}">{{ message }}</p>
