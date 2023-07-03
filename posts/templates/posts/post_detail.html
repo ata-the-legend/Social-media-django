@@ -29,6 +29,11 @@
             {% comment %} <h4>Product Shoot</h4> {% endcomment %}
             {% comment %} vasdvs {% endcomment %}
             <p>{{post.description}}</p>
+            <p>
+            {% for tag in post.post_hashtags %}
+            #{{tag.tag}} 
+            {% endfor %}
+            </p>
                 <div class="stats">
                 <a href={% url 'posts:like' post.id %} class="btn btn-default stat-item">
                 <i class="fa fa-thumbs-up icon"></i>{{post.post_likes}}
