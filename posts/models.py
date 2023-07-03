@@ -128,11 +128,15 @@ class Like(BaseModel):
 
 class Hashtag(BaseModel):
 
-    tag = models.SlugField(_("Hashtag"))
-    user_post = models.ManyToManyField("Post", 
-                                       verbose_name=_("Post"), 
-                                       related_name='tags'
-                                       )
+    tag = models.SlugField(
+                        _("Hashtag"),
+                        unique=True,
+                        )
+    user_post = models.ManyToManyField(
+                                    "Post", 
+                                    verbose_name=_("Post"), 
+                                    related_name='tags',
+                                    )
 
     @classmethod
     def hashtag_posts(cls, tag: str):
