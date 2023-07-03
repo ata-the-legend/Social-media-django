@@ -37,8 +37,12 @@ class Account(models.Model):
         return UserFollow.objects.filter(follower= self, followee= other).exists()
 
     def follow(self, other):
-        if not self.is_followed(other):
+        if not self.is_followed(other) and self != other:
             UserFollow.objects.create(follower= self, followee= other)
+
+    def unfollow(self, other):
+        if self.is_followed(other):
+            UserFollow.objects.get(follower= self, followee= other).delete()
 
     def archive(self):
         self.is_active = False
