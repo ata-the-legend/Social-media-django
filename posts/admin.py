@@ -1,15 +1,22 @@
 from django.contrib import admin
-from .models import Post, Media
+from .models import Post, Media, Hashtag
 
 
 class MediaInline(admin.TabularInline):
     model = Media
     fk_name = 'user_post'
 
+class HashtagInline(admin.TabularInline):
+    model = Hashtag
+    m2m_name = 'user_post'
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     inlines = [
+        HashtagInline,
         MediaInline,
     ]
 
-
+@admin.register(Hashtag)
+class HashtagAdmin(admin.ModelAdmin):
+    pass
