@@ -25,6 +25,11 @@ class AccountTestCase(TestCase):
     def test_follow(self):
         self.account.follow(self.account2)
         self.assertTrue(UserFollow.objects.filter(follower= self.account, followee= self.account2).exists())
+
+    def test_unfollow(self):
+        self.account.follow(self.account2)
+        self.account.unfollow(self.account2)
+        self.assertFalse(UserFollow.objects.filter(follower= self.account, followee= self.account2).exists())
         
     def test_user_followers(self):
         self.account.follow(self.account2)
