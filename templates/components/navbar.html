@@ -66,16 +66,16 @@
             aria-expanded="false"
           >
             <img
-              src={{user.account.get.avatar.url}}
+              src={{request.user.account.get.avatar.url}}
               class="rounded-circle"
               height="22"
-              alt={{user.username}}
+              alt={{request.user.username}}
               loading="lazy"
             />
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li>
-              <a class="dropdown-item" href="{% url 'accounts:profile' user.username %}">My profile</a>
+              <a class="dropdown-item" href="{% url 'accounts:profile' request.user.username %}">My profile</a>
             </li>
             <li>
               <a class="dropdown-item" href="#">Settings</a>
