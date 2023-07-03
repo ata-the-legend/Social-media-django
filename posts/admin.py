@@ -7,8 +7,8 @@ class MediaInline(admin.TabularInline):
     fk_name = 'user_post'
 
 class HashtagInline(admin.TabularInline):
-    model = Hashtag
-    m2m_name = 'user_post'
+    model = Hashtag.user_post.through
+    # m2m_name = 'user_post'
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
