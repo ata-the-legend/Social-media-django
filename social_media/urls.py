@@ -27,5 +27,6 @@ urlpatterns = [
     path("", RedirectView.as_view(url='http://127.0.0.1:8000/posts/all/'), name="home"),
     path('account/', include('accounts.urls')),
     path('posts/', include('posts.urls')),
+    path("relatoins/", include('relations.urls')),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\
       + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

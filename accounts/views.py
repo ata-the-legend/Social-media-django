@@ -14,7 +14,8 @@ class ProfileView(View):
         user = User.objects.get(username=username)
         account = get_object_or_404(Account, user=user)
         posts = account.user_posts
-        context = {'account': account, "user": user, 'posts': posts}
+        followed = request.user.account.get().is_followed(account)
+        context = {'account': account, "user": user, 'posts': posts, 'followed': followed}
         return render(request, 'accounts/account.html', context)
 
 class LoginView(View):

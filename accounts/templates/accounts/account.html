@@ -20,17 +20,18 @@
             <!-- Stats -->   
             <div class="row mb-6">  
                 <div class="col">
-                    <div class="h4 mb-1">120K</div>
+                    <div class="h4 mb-1">{{account.user_followers.count}}</div>
                     <div>Followers</div>        
             </div>
             <div class="col">
-                <div class="h4 mb-1">100K</div>
+                <div class="h4 mb-1">{{account.user_followees.count}}</div>
                 <div>Followees</div>        
             </div>
         </div>  
     
         <div class="row">      
-            <a href="#" class="btn btn-primary mr-2">Follow</a> 
+            <a href="{% url 'relations:user_follow' user.username %}" class="btn btn-primary mr-2">
+              {% if not followed %}Follow {% else %} Unfollow{% endif %} </a> 
             <a href="#" class="btn btn-outline-secondary">Message</a>
         </div>   
     </div>
