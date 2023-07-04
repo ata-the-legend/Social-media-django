@@ -54,6 +54,12 @@
       {% else %}
 
       <div>
+        <a href='{% url 'posts:new_post' %}' type="button" class="btn btn-default" aria-label="Left Align">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><p style="font-size: 10px">new post</p> 
+        </a>
+      </div>
+
+      <div>
       <ul class="navbar-nav">
         <!-- Avatar -->
         <li class="nav-item dropdown">
