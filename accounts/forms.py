@@ -1,5 +1,6 @@
 from typing import Any, Dict
 from django import forms
+from .models import Account
 
 
 class LoginForm(forms.Form):
@@ -24,3 +25,19 @@ class RegisrerForm(forms.Form):
     birthdate= forms.DateField(initial="1990-06-21", widget=forms.SelectDateWidget(years=[x for x in range(1940,2024)]), required=False)
     avatar= forms.ImageField(required=False, widget=forms.FileInput())
 
+
+
+class EditProfileForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-lg', 'placeholder':"Enter Username" }), required=True)
+    first_name= forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-lg', 'placeholder':"Enter your first name" }), required=True)
+    last_name= forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-lg', 'placeholder':"Enter your last name" }), required=True)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control form-control-lg', 'placeholder':"Enter a valid email" }))
+
+    class Meta:
+        model = Account
+        fields = ['bio', 'birthdate', 'avatar']
+        widgets = {
+            'bio' : forms.Textarea(attrs={'class':'form-control form-control-lg', 'placeholder':"Write a Bio", 'rows':3}),
+            'birthdate' : forms.SelectDateWidget(years=[x for x in range(1940,2024)]),
+            'avatar' : forms.FileInput(),
+        }
