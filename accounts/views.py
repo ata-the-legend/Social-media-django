@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect 
 from .models import Account
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
-from .forms import LoginForm, RegisrerForm
+from .forms import LoginForm, RegisrerForm, EditProfileForm
 from .models import Account
 from django.db import IntegrityError
 # Create your views here.
@@ -82,3 +83,49 @@ class RegisterView(View):
                 messages.error(request, 'this error', 'warning')
             
         return render(request, 'accounts/register.html', {'form':form})
+    
+
+
+class EditProfileView(LoginRequiredMixin, View):
+    class_form = EditProfileForm
+    template_name = 'accounts/edit_profile.html'
+
+    def get(self, request):
+        account = request.user.account.get()
+        form = self.class_form(
+                            instance=account,
+                            initial={
+                                'username' : request.user.username,
+                                'first_name': request.user.first_name,
+                                'last_name': request.user.last_name,
+                                'email' : request.user.email,
+                            })
+
+        return render(request, self.template_name, {'form': form})
+    
+    def post(self, request):
+        account = request.user.account.get()
+        user = request.user
+        form = self.class_form(request.POST, request.FILES, instance=account)
+        if form.is_valid():
+            cd = form.cleaned_data
+            try:
+                user.username = cd["username"]
+                user.first_name = cd["first_name"]
+                user.last_name = cd["last_name"]
+                user.email = cd["email"]
+                user.save()
+                form.save()
+            except IntegrityError:
+                messages.error(request, 'this username was taken', 'warning')
+                
+            else:
+                login(request ,user)
+                messages.success(request, f"Changes saved successfully", 'success')
+                return redirect('accounts:profile', cd['username'])
+                
+            
+        return render(request, 'accounts/edit_profile.html', {'form':form})
+
+
+
