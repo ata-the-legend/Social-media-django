@@ -84,7 +84,7 @@
               <a class="dropdown-item" href="{% url 'accounts:profile' request.user.username %}">My profile</a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="{% url 'accounts:edit_profile' %}">Edit Profile</a>
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
