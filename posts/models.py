@@ -81,7 +81,8 @@ class Comment(BaseModel):
 class Media(BaseModel):
 
     user_media = models.FileField(_("Media"), 
-                                  upload_to='uploads/medias/'
+                                  upload_to='uploads/medias/',
+                                  blank=True
                                   )
     alt = models.CharField(_("Alter"), 
                            max_length=100, 

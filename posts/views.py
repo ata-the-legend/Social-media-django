@@ -42,10 +42,13 @@ class PostCreateView(View):
                 post = Post.objects.create(user_account= cd['user_account'], description =cd['description'])
 
             media_cd = media_form.cleaned_data
-            Media.objects.create(user_media= media_cd['user_media'], is_default=media_cd['is_default'], user_post= post)
+            for image in media_cd['user_media']:
+                Media.objects.create(user_media= image, is_default=media_cd['is_default'], user_post= post)
 
             return redirect('accounts:profile', cd['user_account'].user.username)
-        return redirect('posts:new_post')
+        print(media_form.errors)
+        # return redirect('posts:new_post')
+        return render(request, self.template, {'form': form, 'media_form': media_form, 'hashtag_form': hashtag_form})
         
 
 class PostLikeView(LoginRequiredMixin ,View):

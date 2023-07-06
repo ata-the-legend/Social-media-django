@@ -26,16 +26,37 @@ class PostForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'user_account': forms.HiddenInput(),
-            'description': forms.Textarea(attrs={'class': 'form-control'})
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
         }
+
+from django.core.validators import validate_image_file_extension
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+forms.ImageField
+class MultipleFileField(forms.FileField):
+    default_validators = [validate_image_file_extension]
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
 
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
         exclude = ['is_active', 'alt', 'user_post']
         fields = '__all__'
-        widgets = {
-            'user_media': forms.ClearableFileInput(attrs={'allow_multiple_selected': True})
+        # widgets = {
+        #     'user_media': MultipleFileInput #forms.ClearableFileInput()
+        # }
+        field_classes = {
+            'user_media': MultipleFileField
         }
 
 class HashtagForm(forms.ModelForm):
@@ -45,7 +66,7 @@ class HashtagForm(forms.ModelForm):
         model = Hashtag
         fields = ['tag']
         widgets ={
-            'tag': forms.TextInput(attrs={'class': 'form-control', 'rows': 10})
+            'tag': forms.TextInput(attrs={'class': 'form-control'})
         }
 
     def is_valid(self) -> bool:
