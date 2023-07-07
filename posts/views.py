@@ -1,6 +1,6 @@
 from typing import Any
 from django.http import HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import PostForm, MediaForm, HashtagForm
 from .models import Post, Comment, Media, Hashtag
@@ -16,11 +16,13 @@ class PostListView(View):
         context = {'posts': posts}
         return render(request, 'posts/post_list.html', context)
 
-class PostCreateView(View):
+class PostCreateView(LoginRequiredMixin ,View):
     template = 'posts/post_create.html'
 
     def get(self, request):
-        form = PostForm(initial={'user_account': request.user.account.get()})
+        form = PostForm(
+            initial={'user_account': get_object_or_404(request.user.account)}
+            )
         media_form = MediaForm
         hashtag_form = HashtagForm
         return render(request, self.template, {'form': form, 'media_form': media_form, 'hashtag_form': hashtag_form})

@@ -12,11 +12,16 @@ from django.db import IntegrityError
 
 class ProfileView(View):
     def get(self, request, username):
-        user = User.objects.get(username=username)
-        account = get_object_or_404(Account, user=user)
+        owner = User.objects.get(username=username)
+        account = get_object_or_404(Account, user=owner)
         posts = account.user_posts
-        followed = request.user.account.get().is_followed(account)
-        context = {'account': account, "user": user, 'posts': posts, 'followed': followed}
+        try:
+            followed = request.user.account.get().is_followed(account)
+        except Account.DoesNotExist:
+            followed = False
+        except AttributeError:
+            followed = False
+        context = {'account': account, "user": owner, 'posts': posts, 'followed': followed}
         return render(request, 'accounts/account.html', context)
 
 class LoginView(View):
