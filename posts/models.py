@@ -49,6 +49,15 @@ class Post(BaseModel):
         return self.description
 
 
+class PostRecycle(Post):
+
+    archived = models.Manager()
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Recycle Post")
+        verbose_name_plural = _("Recycle Posts")
+
 
 class Comment(BaseModel):
 
