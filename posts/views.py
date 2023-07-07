@@ -132,3 +132,17 @@ class PostEditView(LoginRequiredMixin, View):
             return redirect('accounts:profile', self.user_post.user_account.user.username)
         return render(request, self.template, {'form': form, 'media_form': media_form, 'hashtag_form': hashtag_form, 'post': self.user_post})
 
+class PostArchiveView(LoginRequiredMixin,View):
+
+    def setup(self, request, post_id, *args: Any, **kwargs: Any) -> None:
+        self.user_post = Post.objects.get(id= post_id)
+        return super().setup(request, *args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user != self.user_post.user_account.user:
+            return HttpResponseForbidden('You are not the owner!')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args: Any, **kwargs: Any):
+        self.user_post.archive()
+        return redirect('accounts:profile', self.request.user.username)

@@ -9,5 +9,6 @@ urlpatterns = [
     path("comments/<int:post_id>/<str:on>", PostCommentView.as_view(), name="comment"),
     path("new-post/", PostCreateView.as_view(), name="new_post"),
     path("edit/<int:post_id>", PostEditView.as_view(), name="post_edit"),
+    path("archive/<int:post_id>", PostArchiveView.as_view(), name="post_archive"),
 ]
 
