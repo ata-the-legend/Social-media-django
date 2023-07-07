@@ -1,3 +1,5 @@
+from typing import Any
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import PostForm, MediaForm, HashtagForm
@@ -80,3 +82,53 @@ class PostCommentView(LoginRequiredMixin ,View):
             return redirect('posts:post_list')
         else:
             return redirect('posts:post_list')
+        
+
+class PostEditView(LoginRequiredMixin, View):
+    template_name = 'posts/post_edit.html'
+
+    def setup(self, request, post_id, *args: Any, **kwargs: Any) -> None:
+        self.user_post = Post.objects.get(id= post_id)
+        if self.user_post.tags.all():
+            self.user_tag = self.user_post.tags.all()[0]
+        else:
+            self.user_tag = None
+        
+        self.media = self.user_post.post_media()
+        return super().setup(request, *args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user != self.user_post.user_account.user:
+            return HttpResponseForbidden('You are not the owner!')
+        return super().dispatch(request, *args, **kwargs)
+    
+
+    def get(self, request, *args: Any, **kwargs: Any):
+        form = PostForm(instance=self.user_post)#(initial={'user_account': request.user.account.get()})
+        media_form = MediaForm
+        hashtag_form = HashtagForm(instance= self.user_tag)
+        return render(request, self.template_name, {'form': form, 'media_form': media_form, 'hashtag_form': hashtag_form, 'post': self.user_post})
+
+    def post(self, request, post_id):
+        form = PostForm(request.POST, instance=self.user_post)
+        hashtag_form = HashtagForm(request.POST)
+        media_form = MediaForm(request.POST, request.FILES)
+        if form.is_valid() and hashtag_form.is_valid() and media_form.is_valid():
+            form.save()
+            tag = hashtag_form.cleaned_data['tag']
+            if tag:
+                if not Hashtag.objects.filter(tag = tag).exists():
+                    hashtag = Hashtag.objects.create(tag= tag)
+                else:
+                    hashtag = Hashtag.objects.get(tag = tag)
+                self.user_post.tags.set([hashtag],clear=True)#clear
+            
+            media_cd = media_form.cleaned_data
+            if media_cd['user_media']:
+                Media.objects.filter(user_post=self.user_post).delete()
+                for image in media_cd['user_media']:
+                    Media.objects.create(user_media= image, is_default=media_cd['is_default'], user_post= self.user_post)
+            # print(self.request.path_info)
+            return redirect('accounts:profile', self.user_post.user_account.user.username)
+        return render(request, self.template, {'form': form, 'media_form': media_form, 'hashtag_form': hashtag_form, 'post': self.user_post})
+
