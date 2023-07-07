@@ -16,6 +16,7 @@ class PostAdmin(admin.ModelAdmin):
         HashtagInline,
         MediaInline,
     ]
+    list_display = ['id', 'description', 'user_account']
 
 @admin.register(Hashtag)
 class HashtagAdmin(admin.ModelAdmin):
