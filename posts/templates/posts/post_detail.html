@@ -13,6 +13,18 @@
                     </div>
                 <h6 class="text-muted time">{{post.create_at|timesince}} ago</h6>
                 </div>
+
+                {% if request.user.id == post.user_account.user.id %}
+                <div class="pull-right">
+                    <a href={% url 'posts:post_edit' post.id %} class="btn btn-default stat-item">
+                        Edit
+                    </a>
+                    <a href={% url 'posts:post_archive' post.id %} class="btn btn-default stat-item">
+                        Archive
+                    </a>
+                </div>
+                {% endif %}
+
             </div>
             <div class="post-image">
 
@@ -20,7 +32,7 @@
 
             {% for media in post.post_media %}
                     
-            <img src={{media.user_media.url}} class="image" alt={{media.alt}}>  
+            <img src={{media.user_media.url}} class="image mb-2" alt={{media.alt}} style="height: 400px;">  
                     
             {% endfor %}
 
