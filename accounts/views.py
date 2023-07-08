@@ -134,3 +134,13 @@ class EditProfileView(LoginRequiredMixin, View):
 
 
 
+class AccountArchiveView(LoginRequiredMixin, View):
+    
+    def dispatch(self, request, username, *args, **kwargs):
+        # query = Account.objects.filter(user__username= username)
+        self.account = get_object_or_404(Account, user__username= username)
+        return super().dispatch(request, username, *args, **kwargs)
+    
+    def get(self, request, username):
+        self.account.archive()
+        return redirect('home')
