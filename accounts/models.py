@@ -3,7 +3,20 @@ from django.contrib.auth.models import User
 # from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext as _
 from relations.models import UserFollow
+from posts.models import Post, PostRecycle
 
+
+class SoftQuerySet(models.QuerySet):
+    def delete(self):
+        for account in self:
+            account.user.is_active = False
+            account.user.save()
+        return self.update(is_active=False)
+    
+class SoftManager(models.Manager):
+    def get_queryset(self):
+        return SoftQuerySet(self.model, self._db).filter(is_active = True)
+    
 
 class Account(models.Model):
 
@@ -15,6 +28,9 @@ class Account(models.Model):
     # email = models.EmailField(_("Email"), max_length=254)
     birthdate = models.DateField(_("Birthdate"))
     is_active = models.BooleanField(_("Is_Active"), default= True)
+
+
+    objects = SoftManager()
 
     @property
     def user_posts(self):
