@@ -61,14 +61,18 @@ class Account(models.Model):
             UserFollow.objects.get(follower= self, followee= other).delete()
 
     def archive(self):
+        Post.objects.filter(user_account=self).update(is_active= False)
         self.is_active = False
         self.user.is_active = False
         self.save()
+        self.user.save()
 
     def restore(self):
+        PostRecycle.objects.filter(user_account=self).update(is_active= True)
         self.is_active= True
         self.user.is_active = True
         self.save()
+        self.user.save()
 
     class Meta:
         verbose_name = _("Account")
@@ -76,7 +80,6 @@ class Account(models.Model):
 
     def __str__(self):
         return f'{self.user.username}'
-
 
 
 
