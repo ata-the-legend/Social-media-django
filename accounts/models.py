@@ -82,6 +82,14 @@ class Account(models.Model):
         return f'{self.user.username}'
 
 
+class AccountRecycle(Account):
+
+    archived = models.Manager()
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Recycle Account")
+        verbose_name_plural = _("Recycle Accounts")
 
 
 
