@@ -1,6 +1,7 @@
 from django.db import models
 from core.models import BaseModel
 from django.utils.translation import gettext as _
+from django.urls import reverse
 
 
 
@@ -84,6 +85,10 @@ class Comment(BaseModel):
 
     def __str__(self):
         return self.author.user.username
+    
+    def get_absolute_url(self):
+        return reverse("posts:comment", args=[self.user_post])
+    
 
 
 

@@ -1,5 +1,6 @@
 from typing import Any
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
+from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import PostForm, MediaForm, HashtagForm
@@ -72,9 +73,17 @@ class PostCommentView(LoginRequiredMixin ,View):
         if on == 'post':
             user_post = Post.objects.get(id= post_id)
             user_account = request.user.account.get()
-            Comment.objects.create(user_post= user_post, author= user_account, content=request.POST.get('comment_text'))
+            comment = Comment.objects.create(user_post= user_post, author= user_account, content=request.POST.get('comment_text'))
             messages.success(request, 'Comment registered succesfully.')
-            return redirect('posts:post_list')
+            return JsonResponse(
+                {
+                    'content': comment.content,
+                    'name': comment.author.user.first_name +' '+ comment.author.user.last_name,
+                    'time': comment.create_at,
+                    'avatar': comment.author.avatar.url,
+                    'page': reverse('accounts:profile', args=[comment.author.user.username])
+                }
+            )
         elif on == 'reply':
             parent = Comment.objects.get(id= post_id)
             user_post = Post.objects.get(id= parent.user_post.id)

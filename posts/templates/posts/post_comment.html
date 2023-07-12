@@ -1,14 +1,19 @@
-<form action={% url 'posts:comment' post.id 'post'%} method='post'>
-    {% csrf_token %}
 <div class="input-group">
-    <input class="form-control" placeholder="Add a comment" type="text" name="comment_text" required='True'>
+    <form action={% url 'posts:comment' post.id 'post'%} method='post' id='new-comment{{post.id}}'>
+    {% csrf_token %}
+        <input class="form-control" placeholder="Add a comment" type="text" name="comment_text" required='True'>
+        {% comment %} <span class="input-group-addon">
+        <button type="submit" ><i class="fa fa-edit"></i></button>
+        </span> {% endcomment %}
+    </form>
+    
     <span class="input-group-addon">
-    {% comment %} <a href="/posts/comments/{{post.id}}"><i class="fa fa-edit"></i></a> {% endcomment %}
-    <button type="submit" ><i class="fa fa-edit"></i></button>
+        <button onclick='SendComment("{% url 'posts:comment' post.id 'post'%}", "#new-comment{{post.id}}", "comments{{post.id}}")'>
+            <i class="fa fa-edit"></i></button>
     </span>
+    
 </div>
-</form>
-<ul class="comments-list">
+<ul class="comments-list" id='comments{{post.id}}'>
 
     {% for comment in post.post_comments %}
     {% if comment.parent is None %}
@@ -61,3 +66,59 @@
     {% endfor %}
 
 </ul>
+{% block extra_js %}
+<script>
+    function SendComment(url, form_id, list_id) {
+        console.log(url);
+        console.log(document.getElementById(list_id));
+        
+        $.post(
+            url, $(form_id).serialize(), function (result) {
+                console.log(result);
+                var new_comment = document.createElement("li");
+                new_comment.className = "comment";
+
+                var header = document.createElement("a");
+                header.className = "pull-left";
+                header.href = result.page;
+
+                var avatar = document.createElement("img");
+                avatar.className = "avatar";
+                avatar.src = result.avatar;
+                avatar.alt = "avatar";
+
+                header.appendChild(avatar);
+
+                var body = document.createElement("div")
+                body.className = "comment-body"
+
+                var body_head = document.createElement("div")
+                body_head.className = "comment-heading"
+
+                var name = document.createElement("h4")
+                name.className = "user"
+                name.innerHTML = result.name
+
+                var time = document.createElement("h5")
+                time.className = "time"
+                time.innerHTML = result.time
+
+                body_head.appendChild(name);
+                body_head.appendChild(time);
+
+                var content = document.createElement("p")
+                content.innerHTML = result.content
+
+                body.appendChild(body_head);
+                body.appendChild(content);
+
+                new_comment.appendChild(header);
+                new_comment.appendChild(body);
+
+                document.getElementById(list_id).appendChild(new_comment);
+            }
+        )
+    }
+</script>
+{% endblock extra_js %}
+
