@@ -1,14 +1,14 @@
 <div class="input-group">
     <form action={% url 'posts:comment' post.id 'post'%} method='post' id='new-comment{{post.id}}'>
     {% csrf_token %}
-        <input class="form-control" placeholder="Add a comment" type="text" name="comment_text" required='True'>
+        <input class="form-control" placeholder="Add a comment" type="text" name="comment_text" required='True' id="comment_text{{post.id}}">
         {% comment %} <span class="input-group-addon">
         <button type="submit" ><i class="fa fa-edit"></i></button>
         </span> {% endcomment %}
     </form>
     
     <span class="input-group-addon">
-        <button onclick='SendComment("{% url 'posts:comment' post.id 'post'%}", "#new-comment{{post.id}}", "comments{{post.id}}")'>
+        <button onclick='SendComment("{% url 'posts:comment' post.id 'post'%}", "#new-comment{{post.id}}", "comments{{post.id}}", "comment_text{{post.id}}")'>
             <i class="fa fa-edit"></i></button>
     </span>
     
@@ -68,7 +68,7 @@
 </ul>
 {% block extra_js %}
 <script>
-    function SendComment(url, form_id, list_id) {
+    function SendComment(url, form_id, list_id, comment_text_id) {
         console.log(url);
         console.log(document.getElementById(list_id));
         
@@ -116,6 +116,7 @@
                 new_comment.appendChild(body);
 
                 document.getElementById(list_id).appendChild(new_comment);
+                document.getElementById(comment_text_id).value = "";
             }
         )
     }
